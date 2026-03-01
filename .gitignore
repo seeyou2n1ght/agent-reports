@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
+.cache/
+
+# Node (if needed later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build output (if using build tools)
+dist/
+build/
