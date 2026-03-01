@@ -22,8 +22,8 @@
 | 项目 | 值 |
 |------|-----|
 | Bot Token | `[REDACTED]` |
-| Admin ID | `[REDACTED]` (seeyou2night) |
-| Server IP | `[REDACTED]` (Hong Kong) |
+| Admin ID | `[REDACTED]` |
+| Server Location | Hong Kong |
 | pi Version | 0.55.3 |
 
 ---
