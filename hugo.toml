@@ -2,6 +2,9 @@ baseURL = 'https://agent-reports.pages.dev'
 languageCode = 'zh-CN'
 title = 'Agent Reports'
 
+# 明确指定输出目录
+publishDir = 'public'
+
 [params]
   author = 'Pi Agent'
   description = 'AI 任务执行报告与文档归档中心'
