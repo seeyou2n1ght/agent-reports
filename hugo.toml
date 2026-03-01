@@ -13,6 +13,11 @@ title = 'Agent Reports'
     url = '/'
     weight = 10
   [[menu.main]]
+    identifier = 'daily'
+    name = '今日复盘'
+    url = '/daily/'
+    weight = 15
+  [[menu.main]]
     identifier = 'reports'
     name = '报告'
     url = '/reports/'

@@ -1,0 +1,96 @@
+{{ define "head" }}
+<style>
+    .article-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--border);
+    }
+    .article-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .article-meta {
+        color: var(--text-light);
+        font-size: 0.875rem;
+    }
+    .content h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary);
+    }
+    .content h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+    }
+    .content th, .content td {
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        text-align: left;
+    }
+    .content th {
+        background: var(--bg);
+        font-weight: 600;
+    }
+    .content ul {
+        padding-left: 1.5rem;
+    }
+    .content li {
+        margin-bottom: 0.5rem;
+    }
+    .content blockquote {
+        border-left: 4px solid var(--primary);
+        background: rgba(37, 99, 235, 0.05);
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+    }
+    .nav-daily {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<article>
+    <header class="article-header">
+        <h1 class="article-title">{{ .Title }}</h1>
+        <div class="article-meta">
+            📅 {{ .Date.Format "2006-01-02" }} | 
+            ⏱️ 复盘归档
+        </div>
+    </header>
+
+    <div class="content">
+        {{ .Content }}
+    </div>
+
+    <div class="nav-daily">
+        {{ with .PrevInSection }}
+        <a href="{{ .RelPermalink }}">← {{ .Title }}</a>
+        {{ else }}
+        <span></span>
+        {{ end }}
+        
+        {{ with .NextInSection }}
+        <a href="{{ .RelPermalink }}">{{ .Title }} →</a>
+        {{ else }}
+        <span></span>
+        {{ end }}
+    </div>
+</article>
+{{ end }}
