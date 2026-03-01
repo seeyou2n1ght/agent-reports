@@ -21,9 +21,9 @@
 ### 2.2 环境信息
 | 项目 | 值 |
 |------|-----|
-| Bot Token | `8265898543:AAFW3ic0W--eteKB-R0HDcv8dlTCdRRReMA` |
-| Admin ID | `445658574` (seeyou2night) |
-| Server IP | `47.86.30.161` (Hong Kong) |
+| Bot Token | `[REDACTED]` |
+| Admin ID | `[REDACTED]` |
+| Server Location | Hong Kong |
 | pi Version | 0.55.3 |
 
 ---
