@@ -2,6 +2,7 @@
   "name": "agent-reports",
   "version": "1.0.0",
   "scripts": {
-    "build": "hugo --minify"
+    "build": "hugo --minify",
+    "deploy": "echo 'Build completed'"
   }
 }
