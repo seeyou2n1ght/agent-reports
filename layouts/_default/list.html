@@ -1,0 +1,106 @@
+{{ define "head" }}
+<style>
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+    .report-list {
+        display: grid;
+        gap: 1rem;
+    }
+    .report-item {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .report-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    .report-date {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        background: var(--bg);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+    }
+    .report-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .report-title a {
+        color: var(--text);
+        text-decoration: none;
+    }
+    .report-title a:hover {
+        color: var(--primary);
+    }
+    .report-summary {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    .report-tags {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    .tag {
+        font-size: 0.75rem;
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.1);
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
+    }
+    .month-group {
+        margin-bottom: 2rem;
+    }
+    .month-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border);
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<h1 class="section-title">📚 {{ .Title }}</h1>
+
+{{ $pages := .Pages.GroupByDate "2006年1月" }}
+{{ range $pages }}
+<div class="month-group">
+    <h2 class="month-title">{{ .Key }}</h2>
+    <div class="report-list">
+        {{ range .Pages }}
+        <article class="report-item">
+            <div class="report-meta">
+                <span class="report-date">{{ .Date.Format "2006-01-02" }}</span>
+            </div>
+            <h3 class="report-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <p class="report-summary">{{ .Summary | default "技术报告与问题排查文档" }}</p>
+            {{ with .Params.tags }}
+            <div class="report-tags">
+                {{ range . }}
+                <span class="tag">{{ . }}</span>
+                {{ end }}
+            </div>
+            {{ end }}
+        </article>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
+{{ end }}

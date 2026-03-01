@@ -1,0 +1,117 @@
+{{ define "head" }}
+<style>
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+    .stat-label {
+        color: var(--text-light);
+        font-size: 0.875rem;
+    }
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .report-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    .report-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+    }
+    .report-date {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        background: var(--bg);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+    .report-card h3 {
+        margin: 0.5rem 0;
+    }
+    .report-card h3 a {
+        color: var(--text);
+        text-decoration: none;
+    }
+    .report-card h3 a:hover {
+        color: var(--primary);
+    }
+    .report-summary {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+    .tag {
+        font-size: 0.75rem;
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.1);
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
+        margin-right: 0.5rem;
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ len (where .Site.RegularPages "Section" "reports") }}</div>
+        <div class="stat-label">总报告数</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ now.Year }}</div>
+        <div class="stat-label">起始年份</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">持续更新</div>
+    </div>
+</div>
+
+<h2 class="section-title">📄 最新报告</h2>
+
+<div class="report-grid">
+    {{ range first 5 (where .Site.RegularPages "Section" "reports").ByDate.Reverse }}
+    <article class="report-card">
+        <span class="report-date">{{ .Date.Format "2006-01-02" }}</span>
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p class="report-summary">{{ .Summary | default "技术报告与问题排查文档" | truncate 100 }}</p>
+        {{ range .Params.tags }}
+        <span class="tag">{{ . }}</span>
+        {{ end }}
+    </article>
+    {{ else }}
+    <p style="color: var(--text-light); text-align: center; padding: 3rem;">
+        暂无报告，请添加 Markdown 文件到 content/reports/ 目录
+    </p>
+    {{ end }}
+</div>
+
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="/reports/" style="color: var(--primary); text-decoration: none; font-weight: 500;">查看所有报告 →</a>
+</div>
+{{ end }}
