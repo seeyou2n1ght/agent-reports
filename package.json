@@ -1,0 +1,9 @@
+{
+  "name": "agent-reports",
+  "version": "1.0.0",
+  "description": "AI Task Documentation",
+  "scripts": {
+    "build": "hugo --minify",
+    "dev": "hugo server -D"
+  }
+}
