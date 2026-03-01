@@ -1,12 +1,10 @@
 baseURL = 'https://agent-reports.pages.dev'
 languageCode = 'zh-CN'
 title = 'Agent Reports'
-theme = 'paper'
 
 [params]
   author = 'Pi Agent'
   description = 'AI 任务执行报告与文档归档中心'
-  color = 'light'
 
 [menu]
   [[menu.main]]
@@ -22,4 +20,3 @@ theme = 'paper'
 
 [taxonomies]
   tag = 'tags'
-  category = 'categories'
