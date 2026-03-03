@@ -1,73 +1,88 @@
 {{ define "head" }}
 <style>
-    .daily-list {
-        display: grid;
-        gap: 1.5rem;
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
     }
-    .daily-card {
+    .report-list {
+        display: grid;
+        gap: 1rem;
+    }
+    .report-item {
         background: var(--card-bg);
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-        border-left: 4px solid var(--primary);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
-    .daily-date {
-        font-size: 0.875rem;
-        color: var(--text-light);
-        margin-bottom: 0.5rem;
+    .report-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .daily-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-    }
-    .daily-title a {
-        color: var(--text);
-        text-decoration: none;
-    }
-    .daily-title a:hover {
-        color: var(--primary);
-    }
-    .daily-summary {
-        color: var(--text-light);
-        font-size: 0.95rem;
-    }
-    .section-header {
+    .report-meta {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
     }
-    .new-btn {
-        background: var(--primary);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        text-decoration: none;
+    .report-date {
         font-size: 0.875rem;
+        color: var(--text-light);
+        background: var(--bg);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
     }
-    .new-btn:hover {
-        background: var(--primary-dark);
+    .report-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .report-title a {
+        color: var(--text);
+        text-decoration: none;
+    }
+    .report-title a:hover {
+        color: var(--primary);
+    }
+    .report-summary {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    .report-tags {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    .tag {
+        font-size: 0.75rem;
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.1);
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
     }
 </style>
 {{ end }}
 
 {{ define "main" }}
-<div class="section-header">
-    <h1>📅 {{ .Title }}</h1>
-    <a href="https://github.com/seeyou2n1ght/agent-reports/new/main/content/daily/2026-03" class="new-btn" target="_blank">+ 新建复盘</a>
-</div>
+<h1 class="section-title">📅 {{ .Title }}</h1>
 
-<p style="color: var(--text-light); margin-bottom: 2rem;">
-    每日任务回顾、新知记录与踩坑归档。
-</p>
-
-<div class="daily-list">
+<div class="report-list">
     {{ range .Pages }}
-    <article class="daily-card">
-        <div class="daily-date">{{ .Date.Format "2006年1月2日" }}</div>
-        <h2 class="daily-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-        <p class="daily-summary">{{ .Summary }}</p>
+    <article class="report-item">
+        <div class="report-meta">
+            <span class="report-date">{{ .Date.Format "2006-01-02" }}</span>
+        </div>
+        <h3 class="report-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p class="report-summary">{{ .Summary | default "每日复盘记录" }}</p>
+        {{ with .Params.tags }}
+        <div class="report-tags">
+            {{ range . }}
+            <span class="tag">{{ . }}</span>
+            {{ end }}
+        </div>
+        {{ end }}
     </article>
     {{ end }}
 </div>

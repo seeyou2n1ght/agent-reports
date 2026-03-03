@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ if .Title }}{{ .Title }} - {{ end }}Agent Reports</title>
-    <meta name="description" content="{{ .Summary | default "AI Task Documentation" }}">
+    <title>{{ if .Title }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
+    <meta name="description" content="{{ .Summary | default .Site.Params.description }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --accent: #10b981;
+            --accent-dark: #059669;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #1e293b;
@@ -18,81 +22,378 @@
             --code-bg: #f1f5f9;
             --pre-bg: #1e293b;
             --pre-color: #e2e8f0;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --orange: #f97316;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --code-bg: #1e293b;
+            --pre-bg: #0f172a;
+            --pre-color: #e2e8f0;
+        }
+
         * { box-sizing: border-box; }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7;
+            transition: background 0.3s, color 0.3s;
         }
+        
+        /* Header */
         .site-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 2rem;
+            padding: 3rem 2rem 4rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
         }
         .site-header h1 {
-            font-size: 2rem;
-            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+            margin: 0 0 0.75rem 0;
+            font-weight: 800;
+            position: relative;
+            letter-spacing: -0.02em;
         }
         .site-header p {
             opacity: 0.9;
             margin: 0;
+            font-size: 1.15rem;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .site-header a {
             color: white;
             text-decoration: none;
         }
+        
+        /* Navigation */
         nav {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
+            padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        [data-theme="dark"] nav {
+            background: rgba(30, 41, 59, 0.95);
         }
         nav .nav-content {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            gap: 2rem;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        nav .nav-links {
+            display: flex;
+            gap: 0;
         }
         nav a {
             color: var(--text);
             text-decoration: none;
             font-weight: 500;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         nav a:hover,
         nav a.active {
             color: var(--primary);
+            border-bottom-color: var(--primary);
         }
+        nav .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        nav .theme-toggle:hover {
+            background: var(--bg);
+        }
+        
+        /* Main Content */
         main {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            min-height: calc(100vh - 350px);
         }
+        
+        /* Footer */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             color: var(--text-light);
             font-size: 0.875rem;
             border-top: 1px solid var(--border);
-            margin-top: 3rem;
+            background: var(--card-bg);
+        }
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        footer .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: rgba(37,99,235,0.05);
+        }
+        
+        /* Tags */
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .tag-blue {
+            color: var(--primary);
+            background: rgba(37,99,235,0.1);
+        }
+        .tag-green {
+            color: var(--accent-dark);
+            background: rgba(16,185,129,0.1);
+        }
+        .tag-purple {
+            color: var(--purple);
+            background: rgba(139,92,246,0.1);
+        }
+        .tag-orange {
+            color: var(--warning);
+            background: rgba(245,158,11,0.1);
+        }
+        .tag-pink {
+            color: var(--pink);
+            background: rgba(236,72,153,0.1);
+        }
+        
+        /* Article Content */
+        article h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        article h2 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        article h3 {
+            font-size: 1.25rem;
+            margin: 1.5rem 0 0.75rem;
+        }
+        article p {
+            margin-bottom: 1rem;
+        }
+        article ul, article ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        article li {
+            margin-bottom: 0.5rem;
+        }
+        article code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+        article pre {
+            background: var(--pre-bg);
+            color: var(--pre-color);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        article pre code {
+            background: none;
+            padding: 0;
+        }
+        article blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-light);
+        }
+        article table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        article th, article td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        article th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        
+        /* Section Title */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title a {
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav .nav-content {
+                flex-wrap: wrap;
+                padding: 0 1rem;
+            }
+            nav a {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+            main {
+                padding: 1rem;
+            }
+            .site-header {
+                padding: 2rem 1rem 3rem;
+            }
+            .site-header h1 {
+                font-size: 1.75rem;
+            }
+            footer .footer-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
         }
     </style>
     {{ block "head" . }}{{ end }}
 </head>
 <body>
     <header class="site-header">
-        <h1><a href="/">🤖 Agent Reports</a></h1>
-        <p>AI 任务执行报告与文档归档中心</p>
+        <h1><a href="/">🤖 {{ .Site.Title }}</a></h1>
+        <p>{{ .Site.Params.description }}</p>
     </header>
 
     <nav>
         <div class="nav-content">
-            <a href="/" {{ if .IsHome }}class="active"{{ end }}>首页</a>
-            <a href="/reports/" {{ if eq .Section "reports" }}class="active"{{ end }}>所有报告</a>
+            <div class="nav-links">
+                <a href="/" {{ if .IsHome }}class="active"{{ end }}><i class="fas fa-home"></i> 首页</a>
+                <a href="/daily/" {{ if eq .Section "daily" }}class="active"{{ end }}><i class="fas fa-calendar-day"></i> 每日复盘</a>
+                <a href="/reports/" {{ if eq .Section "reports" }}class="active"{{ end }}><i class="fas fa-file-alt"></i> 技术报告</a>
+                <a href="/capabilities/" {{ if eq .Section "capabilities" }}class="active"{{ end }}><i class="fas fa-chart-radar"></i> 能力全景</a>
+                <a href="/about/" {{ if eq .Section "about" }}class="active"{{ end }}><i class="fas fa-user"></i> 关于我</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
         </div>
     </nav>
 
@@ -101,7 +402,31 @@
     </main>
 
     <footer>
+        <div class="footer-links">
+            <a href="https://github.com/yourname/agent-reports" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="/index.xml"><i class="fas fa-rss"></i> RSS</a>
+            <a href="mailto:your@email.com"><i class="fas fa-envelope"></i> 联系</a>
+        </div>
         <p>Generated by pi-coding-agent · Built with Hugo · Deployed on Cloudflare Pages</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">Last updated: {{ now.Format "2006-01-02" }}</p>
     </footer>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    </script>
 </body>
 </html>
